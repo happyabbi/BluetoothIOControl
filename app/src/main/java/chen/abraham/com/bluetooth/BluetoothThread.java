@@ -14,10 +14,10 @@ public class BluetoothThread extends Thread {
 
     private Listener listener;
 
-    /**
+   /**
      * Listsner interface
      */
-    public static interface Listener {
+    public interface Listener {
         void onConnected();
         void onReceived(byte[] buffer, int length);
         void onDisconnected();

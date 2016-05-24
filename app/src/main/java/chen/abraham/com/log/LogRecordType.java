@@ -22,7 +22,7 @@ public enum LogRecordType {
         return textColor;
     }
 
-    private LogRecordType(String title, int textColor) {
+    LogRecordType(String title, int textColor) {
         this.title = title;
         this.textColor = textColor;
     }

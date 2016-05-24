@@ -26,9 +26,7 @@ public class BluetoothIOControl extends Activity {
 
     private static final String TAG = BluetoothIOControl.class.getSimpleName();
     private static final boolean D = true;
-
-
-
+    
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -43,15 +41,6 @@ public class BluetoothIOControl extends Activity {
     //private EditText mOutEditText;
     private EditText mBT11EditText, mBT21EditText,
     mBT31EditText, mBT41EditText, mBT51EditText, mBT61EditText, mBT71EditText, mBT81EditText ;
-    //private Button mSendButton;
-    private Button _BT11On, _BT21On, _BT31On,
-            _BT41On, _BT51On, _BT61On, _BT71On,
-            _BT81On, _BT91On, _BTA1On;
-
-    private Button _BT11Off, _BT21Off,
-            _BT31Off, _BT41Off, _BT51Off,
-            _BT61Off, _BT71Off, _BT81Off,
-            _BT91Off, _BTA1Off;
 
     private Button btn_device, btn_disconnect, btn_connect;
     // Name of the connected device
@@ -65,7 +54,7 @@ public class BluetoothIOControl extends Activity {
     // Local Bluetooth adapter
     private BluetoothAdapter _bluetoothAdapter = null;
     // Member object for the chat services
-    private BluetoothIOControlService _chatService = null;
+    private BluetoothIOControlService _bluetoothIOControlService = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +103,7 @@ public class BluetoothIOControl extends Activity {
         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else {
-            if (_chatService == null) setupChat();
+            if (_bluetoothIOControlService == null) setupChat();
         }
 
 
@@ -127,11 +116,11 @@ public class BluetoothIOControl extends Activity {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (_chatService != null) {
+        if (_bluetoothIOControlService != null) {
             // Only if the state is NONE, do we know that we haven't started already
-            if (_chatService.getState() == ConnectionState.NONE) {
+            if (_bluetoothIOControlService.getState() == ConnectionState.NONE) {
               // Start the Bluetooth chat services
-              _chatService.start();
+              _bluetoothIOControlService.start();
             }
         }
 
@@ -159,23 +148,26 @@ public class BluetoothIOControl extends Activity {
     @OnClick(R.id.mBTA1On) public void _BTA1On(){sendMessage("BT10A1"+"\r\n");}
     @OnClick(R.id.mBTA1Off) public void _BTA1Off(){sendMessage("BT10A0"+"\r\n");}
 
-
-    @OnClick(R.id.btn_device) public void btn_device(){scanbt();}
+    @OnClick(R.id.btn_device) public void btn_device(){
+        ScanBluetooth();
+    }
 
 
     @OnClick(R.id.btn_disconnect) public void btn_disconnect(){
-        if (_chatService.getState() == ConnectionState.CONNECTED) {
-            _chatService.stop();
-            _chatService.start();
+        if (_bluetoothIOControlService.getState() == ConnectionState.CONNECTED) {
+            _bluetoothIOControlService.stop();
+            _bluetoothIOControlService.start();
         }
     }
 
-    @OnClick(R.id.btn_connect) public void btn_connect(){createNXTConnection();}
+    @OnClick(R.id.btn_connect) public void btn_connect(){
+        createNXTConnection();
+    }
 
     private void setupChat() {
 
         // Initialize the BluetoothChatService to perform bluetooth connections
-        _chatService = new BluetoothIOControlService(this, mHandler);
+        _bluetoothIOControlService = new BluetoothIOControlService(this, mHandler);
     }
     private void createNXTConnection() {
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -189,14 +181,13 @@ public class BluetoothIOControl extends Activity {
 		        break;
 		    }
 		}
-
 		if (nxtDevice == null)
 		{
 		    Toast toast = Toast.makeText(this, "No paired BT device found", Toast.LENGTH_SHORT);
 		    toast.show();
 		    return;
 		}
-        	_chatService.connect(nxtDevice);
+        	_bluetoothIOControlService.connect(nxtDevice);
 
     }
     @Override
@@ -215,11 +206,11 @@ public class BluetoothIOControl extends Activity {
     public void onDestroy() {
         super.onDestroy();
         // Stop the Bluetooth chat services
-        if (_chatService != null) _chatService.stop();
+        if (_bluetoothIOControlService != null) _bluetoothIOControlService.stop();
         if(D) Log.e(TAG, "--- ON DESTROY ---");
     }
-    private void resetport(){
-    	if (_chatService.getState() == ConnectionState.CONNECTED){
+    private void ResetPort(){
+    	if (_bluetoothIOControlService.getState() == ConnectionState.CONNECTED){
         	CharSequence[] list = new CharSequence[activities.length];
     		for (int i = 0; i < list.length; i++) {
     			//list[i] = (String)activities[i * 2];
@@ -228,7 +219,7 @@ public class BluetoothIOControl extends Activity {
     		}
         }
     }
-    private void scanbt(){
+    private void ScanBluetooth(){
     	Intent serverIntent = new Intent(this, DeviceListActivity.class);
         startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
     }
@@ -247,8 +238,8 @@ public class BluetoothIOControl extends Activity {
 		String data1 = checkcode[0]+checkcode[1]+checkcode[2];
 		if(data1 != hotlifecode){
             // Attempt to connect to the device
-			_chatService.stop();
-    		_chatService.start();
+			_bluetoothIOControlService.stop();
+    		_bluetoothIOControlService.start();
 
         }
     }
@@ -259,7 +250,7 @@ public class BluetoothIOControl extends Activity {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        if (_chatService.getState() != ConnectionState.CONNECTED) {
+        if (_bluetoothIOControlService.getState() != ConnectionState.CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -268,7 +259,7 @@ public class BluetoothIOControl extends Activity {
         if (message.length() > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
-            _chatService.write(send);
+            _bluetoothIOControlService.write(send);
         }
     }
     // The Handler that gets information back from the BluetoothChatService
@@ -282,7 +273,7 @@ public class BluetoothIOControl extends Activity {
                 case ConnectionState.CONNECTED:
                     _title.setText(R.string.title_connected_to);
                     _title.append(_connectedDeviceName);
-                    resetport();
+                    ResetPort();
                     //mConversationArrayAdapter.clear();
                     break;
                 case ConnectionState.CONNECTING:
@@ -329,17 +320,14 @@ public class BluetoothIOControl extends Activity {
                 // Attempt to connect to the device
                 if(changcode[0] == hotlifecode[0] && changcode[1] == hotlifecode[1] && changcode[2] == hotlifecode[2]){	                	
                     // Attempt to connect to the device
-        			_chatService.stop();
-            		_chatService.start();
+        			_bluetoothIOControlService.stop();
+            		_bluetoothIOControlService.start();
                 } 
                 else{
                 	
                 }*/
                 BluetoothDevice device = _bluetoothAdapter.getRemoteDevice(address);
-                _chatService.connect(device);
-
-
-
+                _bluetoothIOControlService.connect(device);
 
             }
             break;

@@ -57,8 +57,6 @@ public class BluetoothIOControlService {
     private ConnectedThread _connectedThread;
     private int _state;
 
-
-
     /**
      * Constructor. Prepares a new BluetoothChat session.
      * @param context  The UI Activity Context
@@ -174,6 +172,7 @@ public class BluetoothIOControlService {
         if (D) Log.d(TAG, "stop");
         if (_connectThread != null) {
             _connectThread.cancel(); _connectThread = null;}
+
         if (_connectedThread != null) {
             _connectedThread.cancel(); _connectedThread = null;}
         if (_acceptThread != null) {

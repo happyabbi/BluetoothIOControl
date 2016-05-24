@@ -8,6 +8,8 @@ android {
         applicationId "chen.abraham.com"
         minSdkVersion 8
         targetSdkVersion 8
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {

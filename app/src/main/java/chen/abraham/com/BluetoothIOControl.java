@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BluetoothIOControl extends Activity {
-	// Debugging
+
     private static final String TAG = BluetoothIOControl.class.getSimpleName();
     private static final boolean D = true;
 

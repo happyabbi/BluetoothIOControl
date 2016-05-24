@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="lhu.f713.stevenpon.com"
+    package="chen.abraham.com"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,13 +10,16 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.android.tools.fd.runtime.BootstrapApplication"
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name="lhu.f713.stevenpon.com.BluetoothIOControl"
+            android:name="chen.abraham.com.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
@@ -26,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="lhu.f713.stevenpon.com.DeviceListActivity"
+            android:name="chen.abraham.com.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/select_device"
             android:theme="@android:style/Theme.Dialog" />

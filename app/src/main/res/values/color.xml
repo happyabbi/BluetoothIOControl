@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="info">#808080</color>
+    <color name="fromDevice">#77C6FF</color>
+    <color name="toDevice">#90FF60</color>
+</resources>
